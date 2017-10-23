@@ -109,6 +109,8 @@ int Element_PHOT::update(UPDATE_FUNC_ARGS)
 							parts[i].ctype = 0x1F<<(rand()%26);
 						if (parts[i].life)
 							parts[i].life++; //Delay death
+					}else{
+						parts[i].ctype = 0x3FF7200F; // colour it orange
 					}
 				}
 				else if ((r&0xFF) == PT_FILT && parts[r>>8].tmp==9)
@@ -119,8 +121,6 @@ int Element_PHOT::update(UPDATE_FUNC_ARGS)
 			}
 	return 0;
 }
-
-
 
 //#TPT-Directive ElementHeader Element_PHOT static int graphics(GRAPHICS_FUNC_ARGS)
 int Element_PHOT::graphics(GRAPHICS_FUNC_ARGS)
