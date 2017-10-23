@@ -27,7 +27,7 @@ Element_RGLS::Element_RGLS()
 	Weight = 100;
 
 	Temperature = R_TEMP+0.0f	+273.15f;
-	HeatConduct = 150;
+	HeatConduct = 153;
 	Description = "Reinforced Glass. Breaks under 125 pressure and reflects 25% of photons.";
 
 	Properties = TYPE_SOLID | PROP_NEUTPASS | PROP_HOT_GLOW | PROP_SPARKSETTLE;
