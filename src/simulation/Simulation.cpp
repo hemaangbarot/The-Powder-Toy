@@ -258,7 +258,7 @@ GameSave * Simulation::Save(int fullX, int fullY, int fullX2, int fullY2, bool i
 	blockH = blockY2-blockY;
 
 	GameSave * newSave = new GameSave(blockW, blockH);
-	
+
 	int storedParts = 0;
 	int elementCount[PT_NUM];
 	std::fill(elementCount, elementCount+PT_NUM, 0);
@@ -291,7 +291,7 @@ GameSave * Simulation::Save(int fullX, int fullY, int fullX2, int fullY2, bool i
 			}
 		}
 	}
-	
+
 	for (size_t i = 0; i < MAXSIGNS && i < signs.size(); i++)
 	{
 		if(signs[i].text.length() && signs[i].x >= fullX && signs[i].y >= fullY && signs[i].x <= fullX2 && signs[i].y <= fullY2)
@@ -302,7 +302,7 @@ GameSave * Simulation::Save(int fullX, int fullY, int fullX2, int fullY2, bool i
 			*newSave << tempSign;
 		}
 	}
-	
+
 	for(int saveBlockX = 0; saveBlockX < newSave->blockWidth; saveBlockX++)
 	{
 		for(int saveBlockY = 0; saveBlockY < newSave->blockHeight; saveBlockY++)
@@ -483,16 +483,16 @@ int Simulation::flood_prop(int x, int y, size_t propoffset, PropertyValue propva
 					case StructProperty::Float:
 						*((float*)(((char*)&parts[i>>8])+propoffset)) = propvalue.Float;
 						break;
-						
+
 					case StructProperty::ParticleType:
 					case StructProperty::Integer:
 						*((int*)(((char*)&parts[i>>8])+propoffset)) = propvalue.Integer;
 						break;
-						
+
 					case StructProperty::UInteger:
 						*((unsigned int*)(((char*)&parts[i>>8])+propoffset)) = propvalue.UInteger;
 						break;
-						
+
 					default:
 						break;
 				}
@@ -1204,7 +1204,7 @@ int Simulation::CreateWalls(int x, int y, int rx, int ry, int wall, Brush * cBru
 		rx = cBrush->GetRadius().X;
 		ry = cBrush->GetRadius().Y;
 	}
-	
+
 	ry = ry/CELL;
 	rx = rx/CELL;
 	x = x/CELL;
@@ -1344,10 +1344,10 @@ int Simulation::FloodWalls(int x, int y, int wall, int bm)
 		else
 			bm = 0;
 	}
-	
+
 	if (bmap[y/CELL][x/CELL]!=bm)
 		return 1;
-	
+
 	// go left as far as possible
 	x1 = x2 = x;
 	while (x1>=CELL)
@@ -1366,7 +1366,7 @@ int Simulation::FloodWalls(int x, int y, int wall, int bm)
 		}
 		x2++;
 	}
-	
+
 	// fill span
 	for (x=x1; x<=x2; x++)
 	{
@@ -1415,7 +1415,7 @@ int Simulation::CreateParts(int positionX, int positionY, int c, Brush * cBrush,
 				newtmp = 300;
 			c = c|newtmp<<8;
 		}
-		
+
 		for (int y = sizeY-1; y >=0; y--)
 		{
 			for (int x = 0; x < sizeX; x++)
@@ -1634,7 +1634,7 @@ int Simulation::FloodParts(int x, int y, int fullc, int cm, int flags)
 	unsigned short (*coord_stack)[2];
 	int coord_stack_size = 0;
 	int created_something = 0;
-	
+
 	if (cm==-1)
 	{
 		//if initial flood point is out of bounds, do nothing
@@ -2047,7 +2047,7 @@ void Simulation::init_can_move()
 	//  1 = Swap
 	//  2 = Both particles occupy the same space.
 	//  3 = Varies, go run some extra checks
-	
+
 	//particles that don't exist shouldn't move...
 	for (destinationType = 0; destinationType < PT_NUM; destinationType++)
 		can_move[0][destinationType] = 0;
@@ -2131,7 +2131,7 @@ void Simulation::init_can_move()
 	// TODO: replace with property
 	for (destinationType = 0; destinationType < PT_NUM; destinationType++)
 	{
-		if (destinationType == PT_GLAS || destinationType == PT_PHOT || destinationType == PT_FILT || destinationType == PT_INVIS
+		if (destinationType == PT_GLAS || destinationType == PT_RGLS || destinationType == PT_PHOT || destinationType == PT_FILT || destinationType == PT_INVIS
 		 || destinationType == PT_CLNE || destinationType == PT_PCLN || destinationType == PT_BCLN || destinationType == PT_PBCN
 		 || destinationType == PT_WATR || destinationType == PT_DSTW || destinationType == PT_SLTW || destinationType == PT_GLOW
 		 || destinationType == PT_ISOZ || destinationType == PT_ISZS || destinationType == PT_QRTZ || destinationType == PT_PQRT
@@ -2398,7 +2398,7 @@ int Simulation::try_move(int i, int x, int y, int nx, int ny)
 					part_change_type(i, x, y, PT_PROT);
 					parts[i].ctype = 0;
 					parts[i].tmp2 = 0x1;
-	
+
 					create_part(r>>8, x, y, PT_ELEC);
 					return 1;
 				}
@@ -2414,7 +2414,7 @@ int Simulation::try_move(int i, int x, int y, int nx, int ny)
 			break;
 		}
 		case PT_NEUT:
-			if ((r&0xFF) == PT_GLAS || (r&0xFF) == PT_BGLA)
+			if ((r&0xFF) == PT_GLAS || (r&0xFF) == PT_BGLA || (r&0xFF) == PT_RGLS)
 				if (rand() < RAND_MAX/10)
 					create_cherenkov_photon(i);
 			break;
@@ -2659,7 +2659,7 @@ int Simulation::is_blocking(int t, int x, int y)
 	if (t & REFRACT) {
 		if (x<0 || y<0 || x>=XRES || y>=YRES)
 			return 0;
-		if ((pmap[y][x] & 0xFF) == PT_GLAS || (pmap[y][x] & 0xFF) == PT_BGLA)
+		if ((pmap[y][x] & 0xFF) == PT_GLAS || (pmap[y][x] & 0xFF) == PT_BGLA || (pmap[y][x] & 0xFF) == PT_RGLS)
 			return 1;
 		return 0;
 	}
@@ -3104,6 +3104,8 @@ int Simulation::create_part(int p, int x, int y, int t, int v)
 
 	switch (t)
 	{
+	case PT_RGLS:
+		break;
 	case PT_SOAP:
 		parts[i].tmp = -1;
 		parts[i].tmp2 = -1;
@@ -3335,7 +3337,7 @@ int Simulation::create_part(int p, int x, int y, int t, int v)
 	case PT_LIGH:
 	{
 		float gx, gy, gsize;
-		
+
 		if (v >= 0)
 		{
 			if (v > 55)
@@ -3468,7 +3470,7 @@ void Simulation::create_cherenkov_photon(int pp)//photons from NEUT going throug
 
 	nx = (int)(parts[pp].x + 0.5f);
 	ny = (int)(parts[pp].y + 0.5f);
-	if ((pmap[ny][nx] & 0xFF) != PT_GLAS && (pmap[ny][nx] & 0xFF) != PT_BGLA)
+	if ((pmap[ny][nx] & 0xFF) != PT_GLAS && (pmap[ny][nx] & 0xFF) != PT_BGLA && (pmap[ny][nx] & 0xFF) != PT_RGLS)
 		return;
 
 	if (hypotf(parts[pp].vx, parts[pp].vy) < 1.44f)
@@ -4013,6 +4015,7 @@ void Simulation::UpdateParticles(int start, int end)
 						if (t == PT_LAVA)
 						{
 							if (parts[i].ctype == PT_BRMT) parts[i].ctype = PT_BMTL;
+							else if (parts[i].ctype == PT_RGLS) parts[i].ctype = PT_GLAS;
 							else if (parts[i].ctype == PT_SAND) parts[i].ctype = PT_GLAS;
 							else if (parts[i].ctype == PT_BGLA) parts[i].ctype = PT_GLAS;
 							else if (parts[i].ctype == PT_PQRT) parts[i].ctype = PT_QRTZ;
@@ -4363,8 +4366,8 @@ killed:
 					{
 						int rt = pmap[fin_y][fin_x] & 0xFF;
 						int lt = pmap[y][x] & 0xFF;
-						int rt_glas = (rt == PT_GLAS) || (rt == PT_BGLA);
-						int lt_glas = (lt == PT_GLAS) || (lt == PT_BGLA);
+						int rt_glas = (rt == PT_GLAS) || (rt == PT_BGLA) || (rt == PT_RGLS);
+						int lt_glas = (lt == PT_GLAS) || (lt == PT_BGLA) || (lt == PT_RGLS);
 						if ((rt_glas && !lt_glas) || (lt_glas && !rt_glas))
 						{
 							if (!get_normal_interp(REFRACT|t, parts[i].x, parts[i].y, parts[i].vx, parts[i].vy, &nrx, &nry)) {
@@ -5283,8 +5286,8 @@ Simulation::Simulation():
 {
     int tportal_rx[] = {-1, 0, 1, 1, 1, 0,-1,-1};
     int tportal_ry[] = {-1,-1,-1, 0, 1, 1, 1, 0};
-    
-    memcpy(portal_rx, tportal_rx, sizeof(tportal_rx));   
+
+    memcpy(portal_rx, tportal_rx, sizeof(tportal_rx));
     memcpy(portal_ry, tportal_ry, sizeof(tportal_ry));
 
     currentTick = 0;
@@ -5338,7 +5341,7 @@ Simulation::Simulation():
 		else
 			elements[i] = Element();
 	}
-	
+
 	tools = GetTools();
 
 	int golRulesCount;
