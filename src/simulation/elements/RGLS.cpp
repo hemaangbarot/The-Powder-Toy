@@ -47,8 +47,12 @@ Element_RGLS::Element_RGLS()
 //#TPT-Directive ElementHeader Element_RGLS static int update(UPDATE_FUNC_ARGS)
 int Element_RGLS::update(UPDATE_FUNC_ARGS)
 {
-	if (sim->pv[y/CELL][x/CELL] < -125.0f || sim->pv[y/CELL][x/CELL] > 125.0f)
-		sim->part_change_type(i,x,y,PT_BGLA);
+	if ((sim->pv[y/CELL][x/CELL] < -125.0f || sim->pv[y/CELL][x/CELL] > 125.0f) && rand()%50 == 0 ){
+		if (rand()%10 == 0) // change to BRMT 1/10 of the time
+			sim->part_change_type(i,x,y,PT_BRMT);
+		else
+			sim->part_change_type(i,x,y,PT_BGLA);
+	}
 	return 0;
 }
 
