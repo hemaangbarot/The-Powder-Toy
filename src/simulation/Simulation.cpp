@@ -3091,7 +3091,7 @@ int Simulation::create_part(int p, int x, int y, int t, int v)
 	parts[i].tmp2 = 0;
 	parts[i].dcolour = 0;
 	parts[i].flags = 0;
-	if (t == PT_GLAS || t == PT_QRTZ || t == PT_TUNG)
+	if (t == PT_GLAS || t == PT_QRTZ || t == PT_TUNG || t == PT_RGLS)
 	{
 		parts[i].pavg[0] = 0.0f;
 		parts[i].pavg[1] = pv[y/CELL][x/CELL];
