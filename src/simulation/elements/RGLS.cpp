@@ -47,13 +47,8 @@ Element_RGLS::Element_RGLS()
 //#TPT-Directive ElementHeader Element_RGLS static int update(UPDATE_FUNC_ARGS)
 int Element_RGLS::update(UPDATE_FUNC_ARGS)
 {
-	parts[i].pavg[0] = parts[i].pavg[1];
-	parts[i].pavg[1] = sim->pv[y/CELL][x/CELL];
-	float diff = parts[i].pavg[1] - parts[i].pavg[0];
-	if (diff > 0.25f || diff < -0.25f)
-	{
+	if (sim->pv[y/CELL][x/CELL] < -125.0f || sim->pv[y/CELL][x/CELL] > 125.0f)
 		sim->part_change_type(i,x,y,PT_BGLA);
-	}
 	return 0;
 }
 
