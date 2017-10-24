@@ -73,7 +73,9 @@ int Element_O2::update(UPDATE_FUNC_ARGS)
 					parts[i].temp+=(rand()%100);
 					parts[i].tmp |= 2;
 				}
-			}
+	
+		}
+        if (parts[i].temp > 9973.15 && 
 	sim->pv[y/CELL][x/CELL] > 250.0f && 
 	sqrt(sim->gravx[((y/CELL)*(XRES/CELL))+(x/CELL)]*sim->gravx[((y/CELL)*(XRES/CELL))+(x/CELL)] + 
 	sim->gravy[((y/CELL)*(XRES/CELL))+(x/CELL)]*sim->gravy[((y/CELL)*(XRES/CELL))+(x/CELL)]) > 20)    
