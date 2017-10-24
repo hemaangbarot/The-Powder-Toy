@@ -74,16 +74,11 @@ int Element_O2::update(UPDATE_FUNC_ARGS)
 					parts[i].tmp |= 2;
 				}
 			}
-	static int a = 0;
-	if (parts[i].temp > 9973.15 && 
 	sim->pv[y/CELL][x/CELL] > 250.0f && 
 	sqrt(sim->gravx[((y/CELL)*(XRES/CELL))+(x/CELL)]*sim->gravx[((y/CELL)*(XRES/CELL))+(x/CELL)] + 
 	sim->gravy[((y/CELL)*(XRES/CELL))+(x/CELL)]*sim->gravy[((y/CELL)*(XRES/CELL))+(x/CELL)]) > 20)    
 	{
-	    a++;
-	    printf("it: %d\n", a);
-	    printf("%f\n",sqrt(sim->gravx[((y/CELL)*(XRES/CELL))+(x/CELL)]*sim->gravx[((y/CELL)*(XRES/CELL))+(x/CELL)] + 
-	    sim->gravy[((y/CELL)*(XRES/CELL))+(x/CELL)]*sim->gravy[((y/CELL)*(XRES/CELL))+(x/CELL)]));
+	    
 		if (!(rand()%5))
 		{
 			int j;
