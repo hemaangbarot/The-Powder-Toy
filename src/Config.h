@@ -1,5 +1,6 @@
 #ifndef CONFIG_H
 #define CONFIG_H
+#include "common/tpt-minmax.h"
 
 
 #ifdef WIN
@@ -166,16 +167,6 @@
 //some compatibility stuff for non-standard compilers
 #if defined(WIN) && !defined(strcasecmp)
 #define strcasecmp stricmp
-#endif
-#if defined(_MSC_VER)
-#if _MSC_VER < 1800
-#define fmin min
-#define fminf min
-#define fmax max
-#define fmaxf max
-#else
-#include <algorithm>
-#endif
 #endif
 
 #if defined(_MSC_VER)
