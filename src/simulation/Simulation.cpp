@@ -2131,7 +2131,7 @@ void Simulation::init_can_move()
 	// TODO: replace with property
 	for (destinationType = 0; destinationType < PT_NUM; destinationType++)
 	{
-		if (destinationType == PT_GLAS || destinationType == PT_RGLS || destinationType == PT_PHOT || destinationType == PT_FILT || destinationType == PT_INVIS
+		if (destinationType == PT_GLAS || destinationType == PT_RGLS  || destinationType == PT_PHOT  || destinationType == PT_FILT || destinationType == PT_INVIS
 		 || destinationType == PT_CLNE || destinationType == PT_PCLN || destinationType == PT_BCLN || destinationType == PT_PBCN
 		 || destinationType == PT_WATR || destinationType == PT_DSTW || destinationType == PT_SLTW || destinationType == PT_GLOW
 		 || destinationType == PT_ISOZ || destinationType == PT_ISZS || destinationType == PT_QRTZ || destinationType == PT_PQRT
@@ -2274,6 +2274,13 @@ int Simulation::try_move(int i, int x, int y, int nx, int ny)
 		return 1;
 
 	e = eval_move(parts[i].type, nx, ny, &r);
+
+	if (parts[i].type == PT_PHOT && (r&0xFF) == PT_RGLS){
+		if((pmap[y][x]&0xFF) != PT_RGLS && (rand() % 100) < 75)
+		{
+			e = 0; // bounce
+		}
+	}
 
 	/* half-silvered mirror */
 	if (!e && parts[i].type==PT_PHOT &&
@@ -2659,7 +2666,7 @@ int Simulation::is_blocking(int t, int x, int y)
 	if (t & REFRACT) {
 		if (x<0 || y<0 || x>=XRES || y>=YRES)
 			return 0;
-		if ((pmap[y][x] & 0xFF) == PT_GLAS || (pmap[y][x] & 0xFF) == PT_BGLA || (pmap[y][x] & 0xFF) == PT_RGLS)
+		if ((pmap[y][x] & 0xFF) == PT_GLAS || (pmap[y][x] & 0xFF) == PT_BGLA )
 			return 1;
 		return 0;
 	}
@@ -2694,7 +2701,7 @@ int Simulation::find_next_boundary(int pt, int *x, int *y, int dm, int *em)
 
 	for (ii=0; ii<8; ii++) {
 		i = (ii + i0) & 7;
-		if ((dm & (1 << i)) && is_boundary(pt, *x+dx[i], *y+dy[i])) {
+		if ((dm & (1 << i)) && is_boundary(pt, *x+dx[i], *y+dy[i]) ) {
 			*x += dx[i];
 			*y += dy[i];
 			*em = i;
@@ -2766,7 +2773,8 @@ int Simulation::get_normal_interp(int pt, float x0, float y0, float dx, float dy
 		x0 += dx;
 		y0 += dy;
 	}
-	if (i >= NORMAL_INTERP)
+
+	if (i >= NORMAL_INTERP && (pmap[y][x] & 0xFF) != PT_RGLS)
 		return 0;
 
 	if (pt == PT_PHOT)
@@ -4366,8 +4374,8 @@ killed:
 					{
 						int rt = pmap[fin_y][fin_x] & 0xFF;
 						int lt = pmap[y][x] & 0xFF;
-						int rt_glas = (rt == PT_GLAS) || (rt == PT_BGLA) || (rt == PT_RGLS);
-						int lt_glas = (lt == PT_GLAS) || (lt == PT_BGLA) || (lt == PT_RGLS);
+						int rt_glas = (rt == PT_GLAS) || (rt == PT_BGLA) ;
+						int lt_glas = (lt == PT_GLAS) || (lt == PT_BGLA) ;
 						if ((rt_glas && !lt_glas) || (lt_glas && !rt_glas))
 						{
 							if (!get_normal_interp(REFRACT|t, parts[i].x, parts[i].y, parts[i].vx, parts[i].vy, &nrx, &nry)) {

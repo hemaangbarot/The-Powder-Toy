@@ -98,27 +98,16 @@ int Element_PHOT::update(UPDATE_FUNC_ARGS)
 					parts[i].vx = vx;
 					parts[i].vy = vy;
 				}
-				else if((r&0xFF) == PT_RGLS && !ry && !rx)// if on RGLS
-				{
-					if(rand()%25 == 0) // 25% of the time, reflect
-					{
-						float a = (rand()%360)*3.14159f/180.0f;
-						parts[i].vx = 3.0f*cosf(a);
-						parts[i].vy = 3.0f*sinf(a);
-						if(parts[i].ctype == 0x3FFFFFFF)
-							parts[i].ctype = 0x1F<<(rand()%26);
-						if (parts[i].life)
-							parts[i].life++; //Delay death
-					}else{
-						parts[i].ctype = 0x3FF7200F; // colour it orange
-					}
-				}
 				else if ((r&0xFF) == PT_FILT && parts[r>>8].tmp==9)
 				{
 					parts[i].vx += ((float)(rand()%1000-500))/1000.0f;
 					parts[i].vy += ((float)(rand()%1000-500))/1000.0f;
 				}
 			}
+			if((pmap[y][x]&0xFF) == PT_RGLS){
+					parts[i].ctype = 0x3FF7200F; // color it orange
+			}
+
 	return 0;
 }
 
